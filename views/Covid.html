@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <script src="https://kit.fontawesome.com/78055610ae.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+       <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.4-build.3588/angular.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+       <script>const req = new XMLHttpRequest();
+      req.open("GET",'https://api.covid19api.com/summary', true);
+      req.send();
+      req.onload=function(){
+        var json = JSON.parse(req.responseText);
+        sessionStorage.setItem("covid",req.responseText);
+      }</script>
+      <script>
+      const request = new XMLHttpRequest();
+      request.open("GET",'https://api.covidindiatracker.com/state_data.json', true);
+      request.send();
+      request.onload=function(){
+        sessionStorage.setItem("state-data",request.responseText);
+      }</script>
+      <style>
+        #change a:hover{
+          background-color:#007bff;
+          color:white;
+        }
+      </style>
+       </head>
+    <body data-spy="scroll" data-target="#change">
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark" id="stats">
+            <a class="navbar-brand">HealthUp<img src="https://cdn.glitch.com/20457a5a-d27c-489c-a282-348e43dc34e6%2Ficon-inactive.png?v=1590593304405"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar"><span class="navbar-toggler-icon"></span></button> 
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+    <ul class="navbar nav">
+    <li class="nav-item">
+      <a class="nav-link active" href="#">Active</a>
+    </li>
+    <!--<li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Dropdown</a>
+      <div class="dropdown-menu">
+        <a class="dropdown-item" href="#">Link 1</a>
+        <a class="dropdown-item" href="#">Link 2</a>
+        <a class="dropdown-item" href="#">Link 3</a></div>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Link</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link disabled" href="#">Disabled</a>
+    </li>-->
+  </ul>
+</div>
+</nav>
+<div class="container-fluid">
+  <div class="row text-white bg-info">
+    <marquee>Stay at Home, stay safe</marquee>
+  </div>
+    <div class="row">
+        <div class="col-sm-2 border-right border-bottom"><ul class="navbar nav nav-pills" id="change">
+            <li class="nav-item mb-1"><a class="nav-link" href="#stats">Stats</a></li>
+          <li class="nav-item mb-1"><a class="nav-link" href="#region">States and Union Territory Data</a></li>
+          <li class="nav-item mb-1"><a class="nav-link" href="#Measures">Measures</a></li>
+          <li class="nav-item mb-1"><a class="nav-link" href="#awareness">Awareness</a></li>
+           <!-- <li class="nav-item"><a class="nav-link" href="#">Overview</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Overview</a></li>-->
+            </ul></div>
+        <div class="col-sm-8 border-right">
+            
+            <div class="row mt-4 pb-4 border-bottom" >
+              <div class="container-fluid">
+              <h1 class="text-danger">Covid - 19 Stats</h1>
+              <div class="row">
+            <div class="col-sm-6 text-info"><h3>
+              Global Stats
+              </h3><canvas id="myChart1" width="6vw" height="6vh"></canvas></div>
+            <div class="col-sm-6 text-info ">
+              <div class="container">
+                <div class="row">
+              <h3>
+                Country Wise
+              </h3>
+              <div class="form-group ml-1 mx-auto">
+              <select class="form-control" id="country" oninput="country()" ng-app="myApp" ng-controller="countrydesc">
+                <option ng-repeat="count in countrystep" ng-value="count.CountryCode">{{count.Country}}</option>
+              </select>
+                  </div></div><canvas id="myChart2" width="6vw" height="6vh"></canvas></div>
+                </div>
+            </div>
+              </div>
+          </div>
+          
+            <div class="row mt-4 pb-4 border-bottom" id="region">
+              <div class="container-fluid">
+                
+              <h1 class="text-danger">
+                States and union territory wise data
+              </h1>
+              <div class="row container-fluid" ng-app="state-app"  id="app1">
+                <select class="form-control justify-content-center" ng-controller="state-controller" oninput="changevalue()" id="statevalue">
+                 
+                  <option ng-repeat="state in state" ng-value="state.state" >{{state.state}}</option>
+                </select>
+                <div class="container">
+                  
+                <div class="row mt-2">
+                  <div class="col-sm-4 mt-2 mx-auto">
+                    <div class="card bg-info">
+                  <img src="https://cdn.glitch.com/20457a5a-d27c-489c-a282-348e43dc34e6%2Ficon-infected.png?v=1590593297316" class="img-reponsive mx-auto" width="70vw">
+                    <div class="card-body text-white">
+                      <h2 class="d-flex justify-content-center">
+                        Active Cases
+                      </h2>
+                    <span id="active" class="d-flex justify-content-center" style="font-size:4vh"></span>
+                    </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4 mt-2 mx-auto">
+                    <div class="card bg-success">
+                  <img src="https://cdn.glitch.com/20457a5a-d27c-489c-a282-348e43dc34e6%2Ficon-inactive.png?v=1590593297316" class="img-reponsive mx-auto" width="70vw">
+                    <div class="card-body text-white">
+                      <h2 class="d-flex justify-content-center">
+                        Recovered
+                      </h2>
+                    <span id="inactive" class="d-flex justify-content-center" style="font-size:4vh"></span>
+                    </div>
+                    </div>
+                  </div>
+                <div class="col-sm-4 mt-2 mx-auto">
+                    <div class="card bg-danger">
+                  <img src="https://cdn.glitch.com/20457a5a-d27c-489c-a282-348e43dc34e6%2Ficon-death.png?v=1590593297316" class="img-reponsive mx-auto" width="70vw">
+                    <div class="card-body text-white">
+                      <h2 class="d-flex justify-content-center">
+                        Total Death
+                      </h2>
+                    <span id="death" class="d-flex justify-content-center" style="font-size:4vh"></span>
+                    </div>
+                    </div>
+                  </div>                
+                </div>
+                </div>
+              </div>
+                <div class="row">
+                  
+                </div>
+              </div>
+            </div>
+          <div class="row mt-4 pb-4 border-bottom">
+            <div class="container-fluid">
+              <h1 id="Measures" class="text-danger">Covid - 19 Measures</h1>
+              <h3 class="text-info">
+                You can reduce your chances of being infected or spreading COVID-19 by taking some simple precautions:
+              </h3>
+              <ul class="list-group">
+              <li class="list-group-item">Regularly and thoroughly clean your hands with an alcohol-based hand rub or wash them with soap and water. 
+                Why? Washing your hands with soap and water or using alcohol-based hand rub kills viruses that may be on your hands.</li>
+              <li class="list-group-item">Maintain at least 1 metre (3 feet) distance between yourself and others. 
+                Why? When someone coughs, sneezes, or speaks they spray small liquid droplets from their nose or mouth which may contain virus. 
+                If you are too close, you can breathe in the droplets, 
+                including the COVID-19 virus if the person has the disease.</li>
+              <li class="list-group-item">Avoid going to crowded places. Why? Where people come together in crowds, 
+                you are more likely to come into close contact with someone that has COIVD-19 and 
+                it is more difficult to maintain physical distance of 1 metre (3 feet).</li>
+              <li class="list-group-item">Avoid touching eyes, nose and mouth. Why? Hands touch many surfaces and can pick up viruses. 
+                Once contaminated, hands can transfer the virus to your eyes, nose or mouth. 
+                From there, the virus can enter your body and infect you.</li>
+              <li class="list-group-item">Make sure you, and the people around you, follow good respiratory hygiene. 
+                This means covering your mouth and nose with your bent elbow or tissue when you cough or sneeze. 
+                Then dispose of the used tissue immediately and wash your hands. Why? Droplets spread virus. 
+                By following good respiratory hygiene, you protect the people around you from viruses such as cold, flu and COVID-19.</li>
+                <li class="list-group-item">Stay home and self-isolate even with minor symptoms such as cough, headache, mild fever, until you recover. Have someone bring you supplies. If you need to leave your house, 
+                  wear a mask to avoid infecting others. 
+                  Why? Avoiding contact with others will protect them from possible COVID-19 and other viruses.</li>
+              </ul>
+            </div>
+          </div>
+          <h1 class="text-danger" id="awareness">Awareness</h1>
+          <div class="container-fluid">
+            <div class="row">
+            <div class="col-sm-4 mt-2 embed-responsive embed-responsive-16by9 mx-auto ml-2">
+            <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/WE1KYyisKGs" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+            <div class="col-sm-4  mt-2 embed-responsive embed-responsive-16by9 mx-auto ml-2">
+            <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/xf1HULn7tuI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+            <div class="col-sm-4  mt-2 embed-responsive embed-responsive-16by9 mx-auto ml-2">
+                <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/Kh2mUBNLjj8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+          </div>
+          </div>
+          <div class="row mt-2 pb-4 border-bottom">
+            <div class="container-fluid">
+              <div class="row">
+            <div class="col-sm-4  mt-2 d-flex justify-content-center">
+            <a href="https://www.mohfw.gov.in/pdf/socialdistancingEnglish.pdf" target="_blank"><img src="https://cdn.glitch.com/20457a5a-d27c-489c-a282-348e43dc34e6%2Fcovid1.png?v=1590472756966" class="img-responsive"></a>
+            </div>
+            <div class="col-sm-4  mt-2 d-flex justify-content-center">
+            <a href="https://www.mohfw.gov.in/pdf/FINAL_14_03_2020_ENg.pdf"  target="_blank"><img class="img-responsive" src="https://cdn.glitch.com/20457a5a-d27c-489c-a282-348e43dc34e6%2Fcovid2.png?v=1590472769256"></a>
+            </div>
+            <div class="col-sm-4  mt-2 d-flex justify-content-center">
+            <a href="https://www.mohfw.gov.in/pdf/ProtectivemeasuresEng.pdf"  target="_blank"><img class="img-responsive" src="https://cdn.glitch.com/20457a5a-d27c-489c-a282-348e43dc34e6%2Fcovid3.png?v=1590472777443"></a>
+            </div>
+              </div>
+            </div>
+          </div>
+          <div class="row pb-4">
+            <div class="col-sm-5 text-secondary mx-auto">
+              <blockqoute><i class="fas fa-quote-right"></i> Doctors won’t make you healthy. Nutritionists won’t make you slim. Teachers won’t make you smart. Gurus won’t make you calm. 
+                Mentors won’t make you rich. Trainers won’t make you fit. Ultimately, you have to take responsibility. Save yourself. <i class="fas fa-quote-left"></i></blockqoute>
+            </div>
+          </div>
+          </div>
+    </div>
+        </div>
+      <div class="container-fluid bg-info d-flex justify-content-center text-white">
+        
+          <div class="row">
+            <div class="col-12">
+        Helpline Number : +91-11-23978046 Toll Free : 1075 Helpline Email ID : <a href="mailto:ncov2019@gov.in" class="text-white">ncov2019@gov.in</a>
+            </div></div>
+      </div>
+      <div class="container-fluid bg-dark pt-4 pb-4">
+        <h2 class="text-light d-flex justify-content-center">
+          Stay healthy, Stay Safe !
+        </h2>
+      </div>
+    </body>
+  <script src="chart1.js"></script>
+  <script>
+    var app = angular.module('myApp', []);
+    app.controller('countrydesc',function($scope){
+      $scope.countrystep=JSON.parse(sessionStorage.getItem("covid")).Countries;
+    })
+  
+  var appp=angular.module('state-app',[]);
+     appp.controller('state-controller',function($scope){
+       $scope.state=JSON.parse(sessionStorage.getItem("state-data"));
+     });
+    angular.bootstrap(document.getElementById("app1"), ['state-app']);
+    
+  </script>
+  <script>
+  function changevalue(){
+    var statevalue=document.getElementById("statevalue").value;
+  
+    var value=JSON.parse(sessionStorage.getItem("state-data"));
+    
+    var i=0;
+    while(1)
+      {
+        if(value[i].state==statevalue){
+          document.getElementById("active").innerHTML=value[i].active;
+          document.getElementById("inactive").innerHTML=value[i].recovered;
+          document.getElementById("death").innerHTML=value[i].deaths;
+          break;
+        }
+        i++;
+      }
+  }
+    window.onload=function(){changevalue(),country()};
+  </script>
+  <script src="chart2.js"></script>
+  
+   
+</html>
