@@ -1,8 +1,10 @@
 document.onload=set();
 function set(){ 
       var json = JSON.parse(sessionStorage.getItem("covid"));
+  
   if(json==null)
     location.reload();
+  
 var ctx = document.getElementById('myChart1').getContext("2d");
 var myChart = new Chart(ctx, {
     type: 'horizontalBar',
