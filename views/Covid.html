@@ -112,7 +112,7 @@
                     <div class="card bg-info">
                   <img src="https://cdn.glitch.com/20457a5a-d27c-489c-a282-348e43dc34e6%2Ficon-infected.png?v=1590593297316" class="img-reponsive mx-auto" width="70vw">
                     <div class="card-body text-white">
-                      <h2 class="d-flex justify-content-center">
+                      <h2 class="d-flex justify-content-center" id="active_state_value">
                         Active Cases
                       </h2>
                     <span id="active" class="d-flex justify-content-center" style="font-size:4vh"></span>
@@ -258,7 +258,10 @@
         i++;
       }
   }
-    window.onload=function(){changevalue(),country()};
+    window.onload=function(){changevalue(),country();var value = document.getElementById("active").innerHTML;
+                            if(value=="")
+                              location.reload();
+                            };
   </script>
   <script src="chart2.js"></script>
   
